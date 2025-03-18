@@ -15,4 +15,4 @@ cas 3 = doublons
 cas 4 = correspondance complete
     code 4
     message : Equipement trouvé, que souhaitez vous savoir dessus?
-    json : id de l'équipement
+    json : nom et id de l'équipement
