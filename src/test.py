@@ -18,7 +18,9 @@ while True:
         print("Quel équipement voulez-vous intervenir ?")
         equipement = input()
     elif len(result) > 1:
-        print("Plusieurs équipements correspondent. Veuillez être plus précis.")
+        print("Plusieurs équipements correspondent. Suggestions :")
+        for i, row in result.iterrows():
+            print(f"{i+1}. {row['Nom']}")
         print("Quel équipement voulez-vous intervenir ?") 
         equipement = input()
     else:
