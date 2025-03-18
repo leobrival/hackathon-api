@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 from keywords import get_keywords
 from recheche import rechercher_equipement, rechercher_ID
+from ia import get_response
 
 app = FastAPI()
 
@@ -13,6 +14,10 @@ class SearchResponse(BaseModel):
 
 class SearchRequest(BaseModel):
     query: str
+
+class AIRequest(BaseModel):
+    prompt: str
+    id_equipement: str
 
 @app.post("/get_nom", response_model=SearchResponse)
 async def search_equipment(request: SearchRequest):
@@ -70,8 +75,26 @@ async def search_by_id(id: str):
         data={
             "nom": result['Nom'].iloc[0],
             "id": result['ID équipement'].iloc[0]
-            }
+        }
     )
+
+@app.post("/ask_ai", response_model=SearchResponse)
+async def ask_ai(request: AIRequest):
+    try:
+        response = get_response(request.prompt, request.id_equipement)
+        return SearchResponse(
+            code=4,
+            message="Réponse de l'IA",
+            data={
+                "response": response['choices'][0]['message']['content']
+            }
+        )
+    except Exception as e:
+        return SearchResponse(
+            code=1,
+            message=f"Erreur lors de la génération de la réponse: {str(e)}",
+            data=None
+        )
 
 if __name__ == "__main__":
     import uvicorn
